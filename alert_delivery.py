@@ -81,7 +81,11 @@ def main():
             continue
         message = format_message(event)
         for channel in CHANNELS:
-            channel(message)
+            try:
+                channel(message)
+            except Exception as e:
+                # 1つのチャネルが失敗しても、他のチャネル・後続の地震の配信は続ける
+                print(f"配信失敗（{channel.__name__}）: {e}")
         delivered += 1
     print(f"完了: {len(events)}件中 {delivered}件を配信しました")
 
